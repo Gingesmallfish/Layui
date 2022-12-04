@@ -89,3 +89,36 @@ layui.define(['jquery', 'element', 'carousel', 'laypage'], function (exports) {
 
   exports('firm', {});
 });
+
+//TODO: 图片懒加载
+//打开页面 调用一次
+start()
+$(window).on('scroll', function() {
+  start() //滚动页面时 调用一次
+})
+//加载函数
+function start() {
+  $('#banner img').not('[data-isLoaded]').each(function() {
+    var $node = $(this)
+    if (isShow($node)) {
+      //设置一个定时器起到缓冲效果
+      setTimeout(function() {
+        loadIng($node)
+      }, 1000)
+
+    }
+  })
+}
+// 页面逻辑
+function isShow($node) {
+  // 当一个元素出现在我们眼前（小于窗口高度）上窗口滚动的高度的时候就意味着到达目标点
+  // 可以开始加载图片或者其他内容
+  return $node.offset().top <= $(window).height() + $(window).scrollTop()
+}
+// 显示状态
+function loadIng($img) {
+  // 获取目标元素 并替换
+  $img.attr('src', $img.attr('data-src'))
+  //性能优化 进行判断 已经加载的不会再进行加载
+  $img.attr('data-isLoaded', 1)
+}
